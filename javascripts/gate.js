@@ -1,11 +1,11 @@
 /* 访问口令遮罩:口令正确才显示站点内容。
- * 口令不以明文存放,这里只保存加盐后的 SHA-256 哈希,用 ./set-passcode.sh 修改。
+ * 口令不以明文存放,这里只保存加盐后的 SHA-256 哈希,用 Site_Dev/set-passcode.sh 修改。
  * 注意:这是纯前端校验,只能挡住普通访客,不是真正的访问控制。 */
 (function () {
   var SALT = "navba-gate-v1:";
-  var HASH = "4978e8644bb938296cfe7c7bc3b1fcc5d477ccdf20877f47eea890f0147fb67c";
-  var REMEMBER_DAYS = 7;
-  var KEY = "navba-gate";
+  var HASH = "cf419491cb8ebb767b4110a8be15501d936b2673ba1f6db6eecb5a71da939abe";
+  var REMEMBER_MINUTES = 60;
+  var KEY = "navba-gate-codes";
 
   var root = document.documentElement;
 
@@ -31,7 +31,7 @@
     try {
       localStorage.setItem(KEY, JSON.stringify({
         h: HASH,
-        exp: Date.now() + REMEMBER_DAYS * 24 * 60 * 60 * 1000
+        exp: Date.now() + REMEMBER_MINUTES * 60 * 1000
       }));
     } catch (e) { /* 无痕模式等写入失败时,仅本次有效 */ }
   }
@@ -46,8 +46,7 @@
     "background:#f5f6f8;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif}" +
     "#gate form{width:min(340px,86vw);padding:32px 28px;background:#fff;border-radius:12px;" +
     "box-shadow:0 4px 24px rgba(0,0,0,.08);text-align:center}" +
-    "#gate h1{margin:0 0 6px;font-size:18px;font-weight:600;color:#222}" +
-    "#gate p{margin:0 0 20px;font-size:13px;color:#777}" +
+    "#gate h1{margin:0 0 20px;font-size:18px;font-weight:600;color:#222}" +
     "#gate input{box-sizing:border-box;width:100%;padding:10px 12px;font-size:15px;border:1px solid #ccc;" +
     "border-radius:8px;outline:none;text-align:center}" +
     "#gate input:focus{border-color:#448aff}" +
@@ -62,8 +61,7 @@
     gate.id = "gate";
     gate.innerHTML =
       '<form autocomplete="off">' +
-      "<h1>领航国际教育 - BA专业代码课程</h1>" +
-      "<p>请输入访问验证码</p>" +
+      "<h1>请输入验证码</h1>" +
       '<input type="password" placeholder="验证码" autofocus>' +
       "<button type=\"submit\">进入</button>" +
       '<div class="err"></div>' +
